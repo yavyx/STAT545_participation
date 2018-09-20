@@ -54,7 +54,7 @@ rename(gapminder, cont=continent)
 arrange(gapminder, lifeExp)
 ```
 
-2. Order by year, in descending order.
+2. Order by life expectancy, in descending order.
 ```{r}
 arrange(gapminder, desc(lifeExp))
 ```
@@ -84,6 +84,11 @@ gapminder %>%
 ```
 
 2. Of those, only take data from Asia.
+```{r}
+gapminder %>%
+  filter(pop > 100000000) %>%
+  filter(continent == "Asia")
+```
 
 ## git stuff (Optional)
 
@@ -95,7 +100,7 @@ Here's an activity for you to do during the break, in case you're all caught up.
 
 Suppose you're the instructor of an R programming course. You write an assignment question to evaluate whether students can write an `if` statement, for which an answer to the question looks something like this:
 
-```
+```{r}
 my_commute <- 60
 if (my_commute > 30) {
     print("That's a long commute!")
@@ -113,18 +118,46 @@ Your task is to use metaprogramming to check whether a response (like the one ab
 # Relational/Comparison and Logical Operators in R
 
 1. Find all entries of Canada and Algeria occuring in the '60s. 
+```{r}
+gapminder %>%
+  filter((country == "Canada" | country == "Algeria") & year >= 1960 & year < 1970)
+gapminder %>%
+  filter(country %in% c("Canada", "Algeria"),
+         year >=1960, year < 1970)
+```
+
 
 2. Find all entries of Canada, and entries of Algeria occuring in the '60s. 
 3. Find all entries _not_ including Canada and Algeria.
+```{r}
+gapminder %>%
+  filter((country != "Canada" | country != "Algeria"))
+```
+
+
 
 # Bonus Exercises
 
 If there's time remaining, we'll practice with these three exercises. I'll give you 1 minute for each, then we'll go over the answer.
 
 1. Take all countries in Europe that have a GDP per capita greater than 10000, and select all variables except `gdpPercap`. (Hint: use `-`).
+```{r}
+gapminder %>%
+  filter(continent == "Europe" & gdpPercap > 10000) %>%
+  select(-gdpPercap)
+```
 
 2. Take the first three columns, and extract the names.
+
+```{r}
+colnames(gapminder)[1:3]
+```
 
 3. Of the `iris` data frame, take all columns that start with the word "Petal". 
     - Hint: take a look at the "Select helpers" documentation by running the following code: `?tidyselect::select_helpers`.
     - Exercise from [r-exercises](https://www.r-exercises.com/2017/10/19/dplyr-basic-functions-exercises/).
+```{r}
+data(iris)
+select(iris, starts_with("Petal"))
+```
+

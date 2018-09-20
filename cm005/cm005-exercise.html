@@ -262,7 +262,7 @@ library(tidyverse)</code></pre>
 ## 10 Burkina Faso Africa     1952    32.0 4469979      543.
 ## # ... with 1,694 more rows</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Order by year, in descending order.</li>
+<li>Order by life expectancy, in descending order.</li>
 </ol>
 <pre class="r"><code>arrange(gapminder, desc(lifeExp))</code></pre>
 <pre><code>## # A tibble: 1,704 x 6
@@ -346,6 +346,23 @@ library(tidyverse)</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Of those, only take data from Asia.</li>
 </ol>
+<pre class="r"><code>gapminder %&gt;%
+  filter(pop &gt; 100000000) %&gt;%
+  filter(continent == &quot;Asia&quot;)</code></pre>
+<pre><code>## # A tibble: 52 x 6
+##    country    continent  year lifeExp       pop gdpPercap
+##    &lt;fct&gt;      &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;
+##  1 Bangladesh Asia       1987    52.8 103764241      752.
+##  2 Bangladesh Asia       1992    56.0 113704579      838.
+##  3 Bangladesh Asia       1997    59.4 123315288      973.
+##  4 Bangladesh Asia       2002    62.0 135656790     1136.
+##  5 Bangladesh Asia       2007    64.1 150448339     1391.
+##  6 China      Asia       1952    44   556263527      400.
+##  7 China      Asia       1957    50.5 637408000      576.
+##  8 China      Asia       1962    44.5 665770000      488.
+##  9 China      Asia       1967    58.4 754550000      613.
+## 10 China      Asia       1972    63.1 862030000      677.
+## # ... with 42 more rows</code></pre>
 </div>
 <div id="git-stuff-optional" class="section level2">
 <h2>git stuff (Optional)</h2>
@@ -356,12 +373,13 @@ library(tidyverse)</code></pre>
 <h1>Break/Challenge: metaprogramming</h1>
 <p>Here’s an activity for you to do during the break, in case you’re all caught up. It should help you understand metaprogramming a bit more.</p>
 <p>Suppose you’re the instructor of an R programming course. You write an assignment question to evaluate whether students can write an <code>if</code> statement, for which an answer to the question looks something like this:</p>
-<pre><code>my_commute &lt;- 60
+<pre class="r"><code>my_commute &lt;- 60
 if (my_commute &gt; 30) {
     print(&quot;That's a long commute!&quot;)
 } else {
     print(&quot;That's a short commute.&quot;)
 }</code></pre>
+<pre><code>## [1] &quot;That's a long commute!&quot;</code></pre>
 <p>Your task is to use metaprogramming to check whether a response (like the one above) works and contains an <code>if</code> statement. You should roughly follow these steps, using <a href="https://adv-r.hadley.nz/expressions.html">adv-r: expressions</a> as a resource (especially Section 18.1).</p>
 <ol style="list-style-type: decimal">
 <li>Wrap the above block of code in the <code>expr()</code> function from the <code>rlang</code> package.</li>
@@ -372,23 +390,236 @@ if (my_commute &gt; 30) {
 <div id="relationalcomparison-and-logical-operators-in-r" class="section level1">
 <h1>Relational/Comparison and Logical Operators in R</h1>
 <ol style="list-style-type: decimal">
-<li><p>Find all entries of Canada and Algeria occuring in the ’60s.</p></li>
-<li>Find all entries of Canada, and entries of Algeria occuring in the ’60s.</li>
-<li><p>Find all entries <em>not</em> including Canada and Algeria.</p></li>
+<li>Find all entries of Canada and Algeria occuring in the ’60s.</li>
 </ol>
+<pre class="r"><code>gapminder %&gt;%
+  filter((country == &quot;Canada&quot; | country == &quot;Algeria&quot;) &amp; year &gt;= 1960 &amp; year &lt; 1970)</code></pre>
+<pre><code>## # A tibble: 4 x 6
+##   country continent  year lifeExp      pop gdpPercap
+##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Algeria Africa     1962    48.3 11000948     2551.
+## 2 Algeria Africa     1967    51.4 12760499     3247.
+## 3 Canada  Americas   1962    71.3 18985849    13462.
+## 4 Canada  Americas   1967    72.1 20819767    16077.</code></pre>
+<pre class="r"><code>gapminder %&gt;%
+  filter(country %in% c(&quot;Canada&quot;, &quot;Algeria&quot;),
+         year &gt;=1960, year &lt; 1970)</code></pre>
+<pre><code>## # A tibble: 4 x 6
+##   country continent  year lifeExp      pop gdpPercap
+##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Algeria Africa     1962    48.3 11000948     2551.
+## 2 Algeria Africa     1967    51.4 12760499     3247.
+## 3 Canada  Americas   1962    71.3 18985849    13462.
+## 4 Canada  Americas   1967    72.1 20819767    16077.</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Find all entries of Canada, and entries of Algeria occuring in the ’60s.</li>
+<li>Find all entries <em>not</em> including Canada and Algeria.</li>
+</ol>
+<pre class="r"><code>gapminder %&gt;%
+  filter((country != &quot;Canada&quot; | country != &quot;Algeria&quot;))</code></pre>
+<pre><code>## # A tibble: 1,704 x 6
+##    country     continent  year lifeExp      pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       1952    28.8  8425333      779.
+##  2 Afghanistan Asia       1957    30.3  9240934      821.
+##  3 Afghanistan Asia       1962    32.0 10267083      853.
+##  4 Afghanistan Asia       1967    34.0 11537966      836.
+##  5 Afghanistan Asia       1972    36.1 13079460      740.
+##  6 Afghanistan Asia       1977    38.4 14880372      786.
+##  7 Afghanistan Asia       1982    39.9 12881816      978.
+##  8 Afghanistan Asia       1987    40.8 13867957      852.
+##  9 Afghanistan Asia       1992    41.7 16317921      649.
+## 10 Afghanistan Asia       1997    41.8 22227415      635.
+## # ... with 1,694 more rows</code></pre>
 </div>
 <div id="bonus-exercises" class="section level1">
 <h1>Bonus Exercises</h1>
 <p>If there’s time remaining, we’ll practice with these three exercises. I’ll give you 1 minute for each, then we’ll go over the answer.</p>
 <ol style="list-style-type: decimal">
-<li><p>Take all countries in Europe that have a GDP per capita greater than 10000, and select all variables except <code>gdpPercap</code>. (Hint: use <code>-</code>).</p></li>
-<li><p>Take the first three columns, and extract the names.</p></li>
+<li>Take all countries in Europe that have a GDP per capita greater than 10000, and select all variables except <code>gdpPercap</code>. (Hint: use <code>-</code>).</li>
+</ol>
+<pre class="r"><code>gapminder %&gt;%
+  filter(continent == &quot;Europe&quot; &amp; gdpPercap &gt; 10000) %&gt;%
+  select(-gdpPercap)</code></pre>
+<pre><code>## # A tibble: 214 x 5
+##    country continent  year lifeExp     pop
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;
+##  1 Austria Europe     1962    69.5 7129864
+##  2 Austria Europe     1967    70.1 7376998
+##  3 Austria Europe     1972    70.6 7544201
+##  4 Austria Europe     1977    72.2 7568430
+##  5 Austria Europe     1982    73.2 7574613
+##  6 Austria Europe     1987    74.9 7578903
+##  7 Austria Europe     1992    76.0 7914969
+##  8 Austria Europe     1997    77.5 8069876
+##  9 Austria Europe     2002    79.0 8148312
+## 10 Austria Europe     2007    79.8 8199783
+## # ... with 204 more rows</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Take the first three columns, and extract the names.</li>
+</ol>
+<pre class="r"><code>colnames(gapminder)[1:3]</code></pre>
+<pre><code>## [1] &quot;country&quot;   &quot;continent&quot; &quot;year&quot;</code></pre>
+<ol start="3" style="list-style-type: decimal">
 <li>Of the <code>iris</code> data frame, take all columns that start with the word “Petal”.
 <ul>
 <li>Hint: take a look at the “Select helpers” documentation by running the following code: <code>?tidyselect::select_helpers</code>.</li>
 <li>Exercise from <a href="https://www.r-exercises.com/2017/10/19/dplyr-basic-functions-exercises/">r-exercises</a>.</li>
 </ul></li>
 </ol>
+<pre class="r"><code>data(iris)
+select(iris, starts_with(&quot;Petal&quot;))</code></pre>
+<pre><code>##     Petal.Length Petal.Width
+## 1            1.4         0.2
+## 2            1.4         0.2
+## 3            1.3         0.2
+## 4            1.5         0.2
+## 5            1.4         0.2
+## 6            1.7         0.4
+## 7            1.4         0.3
+## 8            1.5         0.2
+## 9            1.4         0.2
+## 10           1.5         0.1
+## 11           1.5         0.2
+## 12           1.6         0.2
+## 13           1.4         0.1
+## 14           1.1         0.1
+## 15           1.2         0.2
+## 16           1.5         0.4
+## 17           1.3         0.4
+## 18           1.4         0.3
+## 19           1.7         0.3
+## 20           1.5         0.3
+## 21           1.7         0.2
+## 22           1.5         0.4
+## 23           1.0         0.2
+## 24           1.7         0.5
+## 25           1.9         0.2
+## 26           1.6         0.2
+## 27           1.6         0.4
+## 28           1.5         0.2
+## 29           1.4         0.2
+## 30           1.6         0.2
+## 31           1.6         0.2
+## 32           1.5         0.4
+## 33           1.5         0.1
+## 34           1.4         0.2
+## 35           1.5         0.2
+## 36           1.2         0.2
+## 37           1.3         0.2
+## 38           1.4         0.1
+## 39           1.3         0.2
+## 40           1.5         0.2
+## 41           1.3         0.3
+## 42           1.3         0.3
+## 43           1.3         0.2
+## 44           1.6         0.6
+## 45           1.9         0.4
+## 46           1.4         0.3
+## 47           1.6         0.2
+## 48           1.4         0.2
+## 49           1.5         0.2
+## 50           1.4         0.2
+## 51           4.7         1.4
+## 52           4.5         1.5
+## 53           4.9         1.5
+## 54           4.0         1.3
+## 55           4.6         1.5
+## 56           4.5         1.3
+## 57           4.7         1.6
+## 58           3.3         1.0
+## 59           4.6         1.3
+## 60           3.9         1.4
+## 61           3.5         1.0
+## 62           4.2         1.5
+## 63           4.0         1.0
+## 64           4.7         1.4
+## 65           3.6         1.3
+## 66           4.4         1.4
+## 67           4.5         1.5
+## 68           4.1         1.0
+## 69           4.5         1.5
+## 70           3.9         1.1
+## 71           4.8         1.8
+## 72           4.0         1.3
+## 73           4.9         1.5
+## 74           4.7         1.2
+## 75           4.3         1.3
+## 76           4.4         1.4
+## 77           4.8         1.4
+## 78           5.0         1.7
+## 79           4.5         1.5
+## 80           3.5         1.0
+## 81           3.8         1.1
+## 82           3.7         1.0
+## 83           3.9         1.2
+## 84           5.1         1.6
+## 85           4.5         1.5
+## 86           4.5         1.6
+## 87           4.7         1.5
+## 88           4.4         1.3
+## 89           4.1         1.3
+## 90           4.0         1.3
+## 91           4.4         1.2
+## 92           4.6         1.4
+## 93           4.0         1.2
+## 94           3.3         1.0
+## 95           4.2         1.3
+## 96           4.2         1.2
+## 97           4.2         1.3
+## 98           4.3         1.3
+## 99           3.0         1.1
+## 100          4.1         1.3
+## 101          6.0         2.5
+## 102          5.1         1.9
+## 103          5.9         2.1
+## 104          5.6         1.8
+## 105          5.8         2.2
+## 106          6.6         2.1
+## 107          4.5         1.7
+## 108          6.3         1.8
+## 109          5.8         1.8
+## 110          6.1         2.5
+## 111          5.1         2.0
+## 112          5.3         1.9
+## 113          5.5         2.1
+## 114          5.0         2.0
+## 115          5.1         2.4
+## 116          5.3         2.3
+## 117          5.5         1.8
+## 118          6.7         2.2
+## 119          6.9         2.3
+## 120          5.0         1.5
+## 121          5.7         2.3
+## 122          4.9         2.0
+## 123          6.7         2.0
+## 124          4.9         1.8
+## 125          5.7         2.1
+## 126          6.0         1.8
+## 127          4.8         1.8
+## 128          4.9         1.8
+## 129          5.6         2.1
+## 130          5.8         1.6
+## 131          6.1         1.9
+## 132          6.4         2.0
+## 133          5.6         2.2
+## 134          5.1         1.5
+## 135          5.6         1.4
+## 136          6.1         2.3
+## 137          5.6         2.4
+## 138          5.5         1.8
+## 139          4.8         1.8
+## 140          5.4         2.1
+## 141          5.6         2.4
+## 142          5.1         2.3
+## 143          5.1         1.9
+## 144          5.9         2.3
+## 145          5.7         2.5
+## 146          5.2         2.3
+## 147          5.0         1.9
+## 148          5.2         2.0
+## 149          5.4         2.3
+## 150          5.1         1.8</code></pre>
 </div>
 
 
