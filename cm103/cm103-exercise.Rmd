@@ -1,6 +1,6 @@
 ---
 title: "cm103 Worksheet"
-output: github_document
+output: html_document
 editor_options: 
   chunk_output_type: inline
 ---
@@ -71,8 +71,8 @@ Example:
 
 ```{r}
 str(wesanderson)
-x <- for (i in 1:length(wesanderson)) x[i] <- wesanderson[[i]][1]
-x
+#x <- for (i in 1:length(wesanderson)) x[i] <- wesanderson[[i]][1]
+#x
 ```
 
 `str()` is not always useful! Try checking the structure of `got_chars` (= Game of Thrones characters):
@@ -93,7 +93,7 @@ str(got_chars[[1]])
 2. Interactive exploration: `View()` and `listviewer::jsonedit(..., mode = "view")`
 
 ```{r}
-View(got_chars)
+#View(got_chars)
 jsonedit(got_chars, mode="view")
 ```
 
@@ -166,7 +166,7 @@ map_chr(wesanderson, `[`, 1)
     3. Then, apply the `table()` function.
 
 ```{r}
-YOUR_CODE_HERE
+#YOUR_CODE_HERE
 ```
 
 
